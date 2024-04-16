@@ -2,32 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  .card {
+    @apply rounded-md bg-opacity-20 bg-teal-600 shadow-inner;
   }
-}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+  .card-accent {
+    @apply rounded-md bg-opacity-20 bg-amber-600 shadow-inner;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-gradient {
+    @apply bg-gradient-to-tr from-teal-200 to-teal-900 inline-block text-transparent bg-clip-text;
+  }
+
+  .text-gradient-accent {
+    @apply bg-gradient-to-tr from-amber-200 to-amber-600 inline-block text-transparent bg-clip-text;
+  }
+
+  .btn-accent {
+    @apply text-sm text-center relative py-3 px-6 m-2 text-teal-50 rounded-md bg-gradient-to-tr from-amber-200 to-amber-500 shadow-sm hover:shadow-md;
+  }
+
+  .btn {
+    @apply text-sm text-center relative py-3 px-6 m-2 text-teal-50 rounded-md  bg-teal-500 shadow-sm hover:shadow-md;
+  }
+
+  .nav-item {
+    @apply text-base text-teal-600 py-2 px-6 m-2 border-l-0 rounded-sm transition-all duration-200 hover:border-l-4 hover:border-teal-600;
+  }
+
+  .nav-item-active {
+    @apply text-base text-teal-600 py-2 px-6 m-2 rounded-sm transition-all duration-200 border-l-4 border-teal-600;
+  }
+
+  .form-label {
+    @apply text-xs my-2 text-teal-900;
+  }
+
+  .form-input {
+    @apply text-xs py-2 px-2 border-none rounded-sm focus:outline-none focus:drop-shadow-lg;
+  }
+
+  .error {
+    @apply text-sm text-center relative py-3 px-6 rounded-t-md text-red-600 bg-slate-950 shadow-sm hover:shadow-md;
   }
 }
