@@ -3,7 +3,6 @@
 import { API_BASE_URL } from "@roomrover/app/config";
 import {
   Account,
-  APIResponse,
   AuthToken,
   CreateRoomAdResponse,
   GetRoomResponse,
@@ -325,6 +324,57 @@ export const getRooms = async () => {
     console.error(error);
     return { success: false, message: "Oops!! Something went wrong!" };
   }
+};
+
+export const getAllRooms = async (formData?: FormData) => {
+  const minPrice = formData?.get("fromPrice");
+  const maxPrice = formData?.get("toPrice");
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/rooms/get-all`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ minPrice, maxPrice }),
+    });
+    const json: GetRoomsResponse = await response.json();
+    console.log(json);
+
+    if (json) return { ...json, success: response.ok };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Oops!! Something went wrong!" };
+  }
+};
+
+export const getFilterdRooms = async (
+  prevState: GetRoomsResponse,
+  formData: FormData
+) => {
+  const minPrice = formData?.get("fromPrice");
+  const maxPrice = formData?.get("toPrice");
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/rooms/get-all`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ minPrice, maxPrice }),
+    });
+    const json: GetRoomsResponse = await response.json();
+    console.log(json);
+
+    if (json) return { ...json, success: response.ok };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Oops!! Something went wrong!" };
+  }
+  return {
+    success: false,
+    message: "Couldn't perform the filter room ad action",
+  };
 };
 
 export const getRoom = async (id: string) => {

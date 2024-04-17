@@ -88,9 +88,6 @@ const RootLayout: React.FC<LayoutProps> = async ({ children }) => {
         authMenus={authMenus()}
         navMenus={navMenus()}
       />
-      {(!account || account?.roles.includes(Role.GUEST)) && (
-        <SearchBar containerClass="p-4 flex justify-center items-center" />
-      )}
       <div className="flex flex-1 overflow-scroll -z-10">{children}</div>
     </div>
   );
