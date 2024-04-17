@@ -5,19 +5,19 @@ import { useFormStatus } from "react-dom";
 
 type LogoutButtonProps = {
   className?: string | undefined;
-  onclick: () => Promise<void> | void;
+  onClick: () => Promise<void> | void;
 };
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ className, onclick }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ className, onClick }) => {
   const { pending } = useFormStatus();
 
   const logout = useCallback(async () => {
-    await onclick();
+    await onClick();
   }, []);
 
   return (
     <button
-      className={`${className} btn`}
+      className={className}
       type="button"
       onClick={logout}
       aria-disabled={pending}

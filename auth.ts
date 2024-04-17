@@ -1,15 +1,13 @@
 import NextAuth, { User } from "next-auth";
 import config from "./auth.config";
-import { Account, AuthToken, LoginResponse } from "@roomrover/app/models";
+import { LoginResponse } from "@roomrover/app/models";
 import Credentials, { CredentialInput } from "next-auth/providers/credentials";
 import { API_BASE_URL } from "@roomrover/app/config";
-import { merge } from "lodash";
+import AppAuthError from "./auth-error";
 
-export interface AuthUser
-  extends User,
-    Partial<Omit<Account, "email">>,
-    Partial<AuthToken> {
-  error?: { message: string; action?: string };
+export interface AuthUser extends User {
+  auth: LoginResponse;
+  isLoggedIn: boolean;
 }
 
 const credentials = Credentials<Record<"email" | "password", CredentialInput>>({
@@ -36,19 +34,22 @@ const credentials = Credentials<Record<"email" | "password", CredentialInput>>({
         body: JSON.stringify(credentials),
       });
       const json: LoginResponse = await response.json();
-      console.log("AUTHORIZE", json.message);
-      if (!response.ok) return null;
-      if (!json.data?.account || !json.data?.token) return null;
-      const user: AuthUser = merge(json.data.account, json.data.token);
-      console.log(user);
+      if (!json.data?.account || !json.data.token) {
+        throw new AppAuthError(json.message || "Login Failed", json.action);
+      }
+      const user: AuthUser = {
+        ...json.data.account,
+        auth: json,
+        isLoggedIn: true,
+      };
+      user.auth = json;
       return user;
     } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-        return null;
+      if (error instanceof AppAuthError) {
+        throw error;
       }
+      throw new AppAuthError("Network Error!!");
     }
-    return null;
   },
 });
 

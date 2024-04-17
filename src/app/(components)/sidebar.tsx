@@ -9,15 +9,14 @@ type SideBarProps = {
 
 const SideBar: React.FC<SideBarProps> = async ({ className }) => {
   const authdata = await auth();
-  const user: AuthUser | null | undefined = authdata?.user;
+  let user: AuthUser | undefined = undefined;
+  if (authdata && authdata.user) {
+    user = authdata.user as AuthUser;
+    if (!user.auth.data) signOut();
+  }
 
   return (
-    <div
-      className={
-        className +
-        " flex flex-col items-center p-2 divide-y divide-teal-400 divide-opacity-80"
-      }
-    >
+    <div className={className + " flex flex-col items-center p-2"}>
       <div className="w-full aspect-video flex flex-col justify-center items-center">
         <Image
           src="/images/profile.png"
@@ -26,7 +25,9 @@ const SideBar: React.FC<SideBarProps> = async ({ className }) => {
           width={20}
           height={20}
         />
-        {user && <p className="p-2">{`Hello, ${user.firstName}`}</p>}
+        {user?.auth.data?.account && (
+          <p className="p-2">{`Hello, ${user?.auth.data?.account.firstName}`}</p>
+        )}
       </div>
       <nav className="w-full flex-1 flex flex-col items-center">
         <Link href="/" className="nav-item-active w-full">
@@ -34,7 +35,7 @@ const SideBar: React.FC<SideBarProps> = async ({ className }) => {
         </Link>
       </nav>
       <div className="w-full flex flex-col items-center">
-        {authdata?.user?.id ? (
+        {user?.auth.data ? (
           <>
             <LogoutButton
               className="btn w-full"

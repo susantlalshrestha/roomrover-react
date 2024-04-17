@@ -1,5 +1,6 @@
 import { merge } from "lodash";
 import { NextAuthConfig } from "next-auth";
+import { AuthUser } from "./auth";
 
 const config: NextAuthConfig = {
   providers: [],
@@ -12,11 +13,14 @@ const config: NextAuthConfig = {
       return true;
     },
     jwt: ({ user, token }) => {
-      if (user) token = merge(token, user);
+      if (user) {
+        const authUser = user as AuthUser;
+        token.authUser = authUser;
+      }
       return token;
     },
     session({ session, token }) {
-      if (session.user) session.user = merge(token);
+      if (session.user) session.user = merge(token.authUser);
       return session;
     },
   },

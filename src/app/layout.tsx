@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import Background from "./(components)/background";
-import Header from "./(components)/header";
-import SideBar from "./(components)/sidebar";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,11 +19,8 @@ type LayoutProps = Readonly<{
 
 const RootLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <html lang="en">
-      <body className={poppins.className}>
-        <Background />
-        {children}
-      </body>
+    <html lang="en" data-theme="light">
+      <body className={poppins.className}>{children}</body>
     </html>
   );
 };

@@ -19,7 +19,7 @@ const LoginForm: React.FC<LoginFormProps> = () => {
 
   useEffect(() => {
     if (state.success) {
-      router.replace("/dashboard");
+      router.replace("/home");
     }
   }, [state]);
 
@@ -29,7 +29,8 @@ const LoginForm: React.FC<LoginFormProps> = () => {
         state.message &&
         (state.action && state.action === "verify-account" ? (
           <Link
-            href={`/auth/verify-email?email=${email}`}
+            href={{ pathname: `/auth/verify-email`, query: { email } }}
+            passHref
             className="error underline"
           >
             {state.message}

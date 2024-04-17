@@ -1,4 +1,4 @@
-import LoginForm from "@roomrover/app/auth/login/login-form";
+import LoginForm from "@roomrover/app/(routes)/auth/login/login-form";
 
 export default function LoginPage() {
   return (
