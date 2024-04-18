@@ -1,5 +1,4 @@
 import Header from "../../(components)/header";
-import SearchBar from "../../(components)/search-bar";
 import { Role } from "../../models";
 import LogoutButton from "../../(components)/logout-button";
 import { logout, sessionAccount } from "../../(lib)/actions";
@@ -8,6 +7,8 @@ import { IoHomeOutline, IoCalendarOutline } from "react-icons/io5";
 import { TbMessage2 } from "react-icons/tb";
 import { CiBookmark } from "react-icons/ci";
 import { NavMenuItem } from "../../(components)/navbar";
+import { permanentRedirect, redirect } from "next/navigation";
+import { signOut } from "../../../../auth";
 
 type LayoutProps = Readonly<{
   children: React.ReactNode;

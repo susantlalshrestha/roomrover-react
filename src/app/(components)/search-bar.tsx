@@ -1,53 +1,38 @@
-// "use client";
-import { auth, AuthUser } from "../../../auth";
-import { getFilterdRooms } from "../(lib)/actions";
-import { GetRoomsResponse } from "../models";
-import { useFormState } from "react-dom";
-
 type Props = {
   containerClass?: string;
 };
 
-const SearchBar: React.FC<Props> = async ({ containerClass }) => {
-  const authdata = await auth();
-  let user: AuthUser | undefined = undefined;
-  if (authdata && authdata.user) {
-    user = authdata.user as AuthUser;
-  }
-  // const [state, action] = useFormState<GetRoomsResponse, FormData>(
-  //   getFilterdRooms,
-  //   { success: false }
-  // );
-
+const SearchBar: React.FC<Props> = ({ containerClass }) => {
   return (
     <div className={containerClass}>
-      <form
-        // action={action}
-        className="w-1/2 backdrop-blur-xl bg-white/30 shadow-md rounded-full flex divide-x text-sm"
-      >
-        <ul className="w-full backdrop-blur-xl bg-white/30 shadow-md rounded-full flex divide-x text-sm">
-          <li className="flex-1 text-center rounded-l-full">
-            <input
-              type="number"
-              id="fromPrice"
-              name="fromPrice"
-              className="form-input p-4 w-full h-full rounded-l-full"
-              placeholder="From Price"
-            />
-          </li>
-          <li className="flex-1 text-center rounded-r-full">
-            <input
-              type="number"
-              id="toPrice"
-              name="toPrice"
-              className="form-input p-4 w-full h-full"
-              placeholder="To Price"
-            />
-          </li>
-          <li className="flex-1 p-4 text-center rounded-r-full">
-            <button type="submit">Filter</button>
-          </li>
-        </ul>
+      <form className="w-9/12 h-16 backdrop-blur-xl bg-white/30 shadow-md rounded-full flex divide-x text-sm">
+        <input
+          type="text"
+          id="search"
+          name="search"
+          className="flex-1 grow text-center form-input rounded-l-full"
+          placeholder="Search"
+        />
+        <input
+          type="number"
+          id="minPrice"
+          name="minPrice"
+          className="text-center form-input"
+          placeholder="Minmum Price"
+        />
+        <input
+          type="number"
+          id="maxPrice"
+          name="maxPrice"
+          className="form-input text-center"
+          placeholder="Maximum Price"
+        />
+        <button
+          className="flex-1 shrink text-center rounded-r-full"
+          type="submit"
+        >
+          Filter
+        </button>
       </form>
     </div>
   );

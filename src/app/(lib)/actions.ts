@@ -13,7 +13,7 @@ import {
   UpdateRoomAdResponse,
   VerifyEmailResponse,
 } from "@roomrover/app/models";
-import { isEmpty, omit, parseInt } from "lodash";
+import { isEmpty, omit } from "lodash";
 import { z, ZodError } from "zod";
 import { auth, AuthUser, signIn, signOut } from "../../../auth";
 import { AuthError } from "next-auth";
@@ -43,7 +43,7 @@ export const sessionToken = async () => {
 };
 
 export const logout = async () => {
-  await signOut();
+  signOut();
   permanentRedirect("/");
 };
 
@@ -326,21 +326,20 @@ export const getRooms = async () => {
   }
 };
 
-export const getAllRooms = async (formData?: FormData) => {
-  const minPrice = formData?.get("fromPrice");
-  const maxPrice = formData?.get("toPrice");
-
+export const getAllRooms = async (
+  search?: string,
+  minPrice?: number,
+  maxPrice?: number
+) => {
   try {
     const response = await fetch(`${API_BASE_URL}/rooms/get-all`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ minPrice, maxPrice }),
+      body: JSON.stringify({ search, minPrice, maxPrice }),
     });
     const json: GetRoomsResponse = await response.json();
-    console.log(json);
-
     if (json) return { ...json, success: response.ok };
   } catch (error) {
     console.error(error);
@@ -348,12 +347,33 @@ export const getAllRooms = async (formData?: FormData) => {
   }
 };
 
-export const getFilterdRooms = async (
+const getFilteredRoomSchema = z.object({
+  minPrice: z
+    .string()
+    .refine((value) => !isNaN(parseFloat(value)), {
+      message: "Input must be a valid number",
+    })
+    .refine((value) => parseFloat(value) > 0, {
+      message: "Input must be greater than zero",
+    }),
+  maxPrice: z
+    .string()
+    .refine((value) => !isNaN(parseFloat(value)), {
+      message: "Input must be a valid number",
+    })
+    .refine((value) => parseFloat(value) > 0, {
+      message: "Input must be greater than zero",
+    }),
+});
+
+export const getFilteredRooms = async (
   prevState: GetRoomsResponse,
   formData: FormData
 ) => {
-  const minPrice = formData?.get("fromPrice");
-  const maxPrice = formData?.get("toPrice");
+  const validated = getFilteredRoomSchema.safeParse({
+    minPrice: formData?.get("minPrice"),
+    maxPrice: formData?.get("maxPrice"),
+  });
 
   try {
     const response = await fetch(`${API_BASE_URL}/rooms/get-all`, {
@@ -361,11 +381,9 @@ export const getFilterdRooms = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ minPrice, maxPrice }),
+      body: JSON.stringify(formData),
     });
     const json: GetRoomsResponse = await response.json();
-    console.log(json);
-
     if (json) return { ...json, success: response.ok };
   } catch (error) {
     console.error(error);
@@ -413,7 +431,7 @@ export const publishRoom = async (id: string) => {
   }
 };
 
-export const uploadRoomImage = async (id: string, image: string) => {
+export const uploadRoomImage = async (id: string, images: string[]) => {
   const token = await sessionToken();
   try {
     const response = await fetch(`${API_BASE_URL}/rooms/update/${id}`, {
@@ -422,7 +440,7 @@ export const uploadRoomImage = async (id: string, image: string) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token?.access}`,
       },
-      body: JSON.stringify({ image }),
+      body: JSON.stringify({ images }),
     });
     const json: GetRoomsResponse = await response.json();
     if (json) return { ...json, success: response.ok };

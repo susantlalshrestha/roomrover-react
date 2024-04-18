@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Account } from "../models";
 import NavBar, { NavMenuItem } from "./navbar";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 type HeaderProps = {
   className?: string | undefined;
@@ -9,7 +10,9 @@ type HeaderProps = {
   account?: Account;
   authMenus?: Array<() => React.ReactNode>;
   navMenus?: Array<NavMenuItem>;
+  navigateUp?: { href: string; label: string };
   noGreet?: boolean;
+  noTitle?: boolean;
 };
 
 const Header: React.FC<HeaderProps> = async ({
@@ -18,7 +21,9 @@ const Header: React.FC<HeaderProps> = async ({
   account,
   authMenus,
   navMenus,
+  navigateUp,
   noGreet,
+  noTitle,
 }) => {
   return (
     <header
@@ -26,11 +31,25 @@ const Header: React.FC<HeaderProps> = async ({
         className + " items-center p-10 backdrop-blur-xl bg-white/30 shadow-sm"
       }
     >
-      <div className="justify-start items-center">
-        <Link href="/" replace className="text-lg font-bold text-teal-900">
-          {title || "Room Rover"}
-        </Link>
-      </div>
+      {navigateUp && (
+        <div className="justify-start items-center">
+          <Link
+            href={navigateUp.href}
+            replace
+            className="flex items-center text-sm font-bold text-teal-900"
+          >
+            <IoArrowBackSharp />
+            <span className="mx-4"> {navigateUp.label}</span>
+          </Link>
+        </div>
+      )}
+      {!noTitle && (
+        <div className="justify-start items-center">
+          <Link href="/" replace className="text-lg font-bold text-teal-900">
+            {title || "Room Rover"}
+          </Link>
+        </div>
+      )}
       <NavBar
         navMenus={navMenus || []}
         containerClass="flex-1 mx-14 justify-start items-center"

@@ -7,10 +7,10 @@ import { useState } from "react";
 
 type UpdateProps = Readonly<{
   roomAd: RoomAd;
-  containerClass?: string;
+  className?: string;
 }>;
 
-const UpdateForm: React.FC<UpdateProps> = ({ containerClass, roomAd }) => {
+const UpdateForm: React.FC<UpdateProps> = ({ className, roomAd }) => {
   const [title, setTitle] = useState<string>(roomAd.title);
   const [price, setPrice] = useState<string>(roomAd.price + "");
   const [description, setDescription] = useState<string>(roomAd.description);
@@ -20,28 +20,27 @@ const UpdateForm: React.FC<UpdateProps> = ({ containerClass, roomAd }) => {
   );
 
   return (
-    <div
-      className={
-        (containerClass && containerClass) + " w-full h-full flex flex-col"
-      }
+    <form
+      action={action}
+      className={(className && className) + " flex flex-col py-6 px-10"}
     >
-      {!state.data && state.message && <p className="error">{state.message}</p>}
-      <form action={action} className="w-full h-full flex flex-col py-2 px-10">
-        <label className="input input-bordered flex items-center gap-2 rounded-sm mb-4 text-sm">
-          ID:
-          <input
-            className="grow"
-            type="text"
-            id="id"
-            name="id"
-            placeholder="ID"
-            value={roomAd.id}
-            readOnly
-            required
-          />
-        </label>
+      <label className="input input-bordered flex items-center gap-2 rounded-sm mb-4 text-sm">
+        # ID:
         <input
-          className="input input-bordered rounded-sm mb-4 text-sm"
+          className="grow"
+          type="text"
+          id="id"
+          name="id"
+          placeholder="ID"
+          value={roomAd.id}
+          readOnly
+          required
+        />
+      </label>
+      <label className="input input-bordered flex items-center gap-2 rounded-sm mb-4 text-sm">
+        Title:
+        <input
+          className="grow"
           type="text"
           id="title"
           name="title"
@@ -50,8 +49,11 @@ const UpdateForm: React.FC<UpdateProps> = ({ containerClass, roomAd }) => {
           onChange={(e) => setTitle(e.target.value)}
           required
         />
+      </label>
+      <label className="input input-bordered flex items-center gap-2 rounded-sm mb-4 text-sm">
+        Price:
         <input
-          className="input input-bordered rounded-sm mb-4 text-sm"
+          className="grow"
           type="number"
           id="price"
           name="price"
@@ -60,19 +62,18 @@ const UpdateForm: React.FC<UpdateProps> = ({ containerClass, roomAd }) => {
           onChange={(e) => setPrice(e.target.value)}
           required
         />
-        <textarea
-          className="input input-bordered rounded-sm mb-4 p-4 min-h-56 text-sm"
-          id="description"
-          name="description"
-          rows={4}
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <UpdateButton />
-      </form>
-    </div>
+      </label>
+      <textarea
+        className="input flex-1 input-bordered rounded-sm mb-4 p-4 min-h-56 text-sm"
+        id="description"
+        name="description"
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        required
+      />
+      <UpdateButton />
+    </form>
   );
 };
 

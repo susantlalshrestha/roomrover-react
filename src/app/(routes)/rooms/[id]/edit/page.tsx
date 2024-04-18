@@ -14,9 +14,9 @@ const Page: React.FC<Props> = async ({ params }) => {
   if (!roomAd) redirect("/my-roomads");
 
   return (
-    <div className="flex flex-row border-b">
-      <UpdateForm roomAd={roomAd} />
-      <UploadForm roomAd={roomAd} />
+    <div className="flex flex-row w-full border-b">
+      <UploadForm roomAd={roomAd} className="w-1/3" />
+      <UpdateForm roomAd={roomAd} className="flex-1" />
     </div>
   );
 };

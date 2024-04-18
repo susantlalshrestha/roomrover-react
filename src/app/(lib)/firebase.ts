@@ -24,8 +24,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const storage = getStorage(app, "gs://roomrover-e976f.appspot.com");
-
 export type ObserseState = {
   onChange: (percentage: number) => void;
   onError: (error: Error) => void;
@@ -38,6 +36,7 @@ export const storePhotos = (
   fileName: string,
   obserseState?: ObserseState
 ): UploadTask => {
+  const storage = getStorage(app, "gs://roomrover-e976f.appspot.com");
   const storageRef = ref(storage, `${type}/${fileName}`);
   const metadata = { contentType: "image/jpeg" };
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
@@ -66,6 +65,7 @@ export const deletePhotos = async (
   fileName: string
 ) => {
   try {
+    const storage = getStorage(app, "gs://roomrover-e976f.appspot.com");
     const storageRef = ref(storage, `${type}/${fileName}`);
     await deleteObject(storageRef);
     return true;
